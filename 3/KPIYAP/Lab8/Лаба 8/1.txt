@@ -1,0 +1,5 @@
+Pepperoni 1 1 48
+Gratias 0 1 89
+Daddy 1 2 32
+Mocarella 4 3 15
+Gavayskaya 2 5 15

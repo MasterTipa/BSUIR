@@ -1,0 +1,114 @@
+﻿//"The moment man devoured the fruit of knowledge, he sealed his fate ... 
+//Entrusting his future to the cards, man clings to a dim hope. 
+//Yet, the Arcana is the means by which all is revealed. 
+//Beyond the beaten path lies the absolute end. 
+//It matters not who you are ... 
+//Death awaits you."
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+#include"Exepcion.h"
+#include"File.h"
+#include"Employee.h"
+#include"Ring.h"
+
+using namespace std;
+
+
+
+int main()
+{
+
+	Employee u1("Mocarella", 4, 3, 15);
+	Employee u2("Pepperoni", 1, 1, 48);
+	Employee u3("Gratias", 0, 1, 89);
+	Employee u4("Gavayskaya", 2, 5, 15);
+	Employee u5("Daddy", 1, 2, 32);
+	Employee flg[5] = { u1,u2,u3,u4,u5 };
+	File f1("1.txt", txt);
+	f1.open("w");
+	f1.set_size(5);
+	f1 << u1;
+	f1 << u2;
+	f1 << u3;
+	f1 << u4;
+	f1 << u5;
+	f1.close();
+	f1.open("r");
+	cout << f1;
+	f1.close();
+	cout << "\n\n";
+	File f2("2.txt", bin);
+	f2.open("w");
+	f2.set_size(5);
+	f2 << u1;
+	f2 << u2;
+	f2 << u3;
+	f2 << u4;
+	f2 << u5;
+	f2.close();
+	f2.open("r");
+	cout << f2;
+	f2.close();
+	cout << "\n\n";
+	File f3("3.bin", bin);
+	f3.open("w");
+	f3.set_size(5);
+	f3 << u1;
+	f3 << u2;
+	f3 << u3;
+	f3 << u4;
+	f3 << u5;
+	f3.close();
+	f3.open("r");
+	cout << f3;
+	f3.close();
+	cout << "\n\n";
+
+	int a = 0, line = 0;
+	//do {
+		cout << "Enter the line that you want to change:" << endl;
+		cin >> line;
+		f2.edit(line, flg);
+		f2.open("r");
+		cout << f2;
+		f2.close();
+		//cout << "Do you want to change anything else?\n1 - yes\n0 - no" << endl;
+		rewind(stdin);
+		//cin >> a;
+	//} while (a);
+
+	cout << "\nSort by name:" << endl;
+	f1.sort_name();
+	f1.open("r");
+	cout << f1;
+	f1.close();
+
+	cout << "Sort by products id:" << endl;
+	f1.sort_id_num();
+	f1.open("r");
+	cout << f1;
+	f1.close();
+
+	cout << "Sort by kvo pz:" << endl;
+	f1.sort_hour_num();
+	f1.open("r");
+	cout << f1;
+	f1.close();
+
+	cout << "Sort by kvo pr:" << endl;
+	f1.sort_payment_num();
+	f1.open("r");
+	cout << f1;
+	f1.close();
+
+	cout << "To chto IsPoRtItSyA\n";
+	f1.sort_hour_num();
+	f1.open("r");
+	cout << f1;
+	f1.close();
+
+	return 0;
+}
