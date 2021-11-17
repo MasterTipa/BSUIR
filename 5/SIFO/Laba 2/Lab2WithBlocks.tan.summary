@@ -1,0 +1,86 @@
+--------------------------------------------------------------------------------------
+Timing Analyzer Summary
+--------------------------------------------------------------------------------------
+
+Type           : Worst-case tco
+Slack          : N/A
+Required Time  : None
+Actual Time    : 12.455 ns
+From           : Block3:inst2|lpm_counter6:inst|lpm_counter:lpm_counter_component|cntr_qlh:auto_generated|safe_q[2]
+To             : DCa[14]
+From Clock     : clk
+To Clock       : --
+Failed Paths   : 0
+
+Type           : Worst-case tpd
+Slack          : N/A
+Required Time  : None
+Actual Time    : 10.479 ns
+From           : M[1]
+To             : clk_inDop
+From Clock     : --
+To Clock       : --
+Failed Paths   : 0
+
+Type           : Worst-case Minimum Pulse Width Requirement (Low)
+Slack          : -0.112 ns
+Required Time  : 0.612 ns
+Actual Time    : 0.500 ns
+From           : clk
+To             : Block1Dop:inst3|lpm_counter12:inst5|lpm_counter:lpm_counter_component|cntr_04i:auto_generated|safe_q[1]
+From Clock     : --
+To Clock       : --
+Failed Paths   : 21
+
+Type           : Worst-case Minimum Pulse Width Requirement (High)
+Slack          : -0.112 ns
+Required Time  : 0.612 ns
+Actual Time    : 0.500 ns
+From           : clk
+To             : Block1Dop:inst3|lpm_counter12:inst5|lpm_counter:lpm_counter_component|cntr_04i:auto_generated|safe_q[1]
+From Clock     : --
+To Clock       : --
+Failed Paths   : 21
+
+Type           : Clock Setup: 'clk'
+Slack          : -1.384 ns
+Required Time  : 1000.00 MHz ( period = 1.000 ns )
+Actual Time    : 419.46 MHz ( period = 2.384 ns )
+From           : Block2:inst1|lpm_counter10:inst|lpm_counter:lpm_counter_component|cntr_a1j:auto_generated|safe_q[0]
+To             : Block2:inst1|lpm_counter10:inst|lpm_counter:lpm_counter_component|cntr_a1j:auto_generated|safe_q[2]
+From Clock     : clk
+To Clock       : clk
+Failed Paths   : 53
+
+Type           : Clock Hold: 'clk'
+Slack          : -0.289 ns
+Required Time  : 1000.00 MHz ( period = 1.000 ns )
+Actual Time    : N/A
+From           : Block3:inst2|lpm_counter6:inst|lpm_counter:lpm_counter_component|cntr_qlh:auto_generated|safe_q[2]
+To             : Block3:inst2|lpm_counter6:inst|lpm_counter:lpm_counter_component|cntr_qlh:auto_generated|safe_q[2]
+From Clock     : clk
+To Clock       : clk
+Failed Paths   : 11
+
+Type           : Other violations (see messages)
+Slack          : 
+Required Time  : 
+Actual Time    : 
+From           : 
+To             : 
+From Clock     : 
+To Clock       : 
+Failed Paths   : 1
+
+Type           : Total number of failed paths
+Slack          : 
+Required Time  : 
+Actual Time    : 
+From           : 
+To             : 
+From Clock     : 
+To Clock       : 
+Failed Paths   : 107
+
+--------------------------------------------------------------------------------------
+
