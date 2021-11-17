@@ -1,0 +1,341 @@
+EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
+ 
+2.exe -- emu8086 assembler version: 4.05  
+ 
+[ 25.03.2021  --  17:47:57 ] 
+ 
+===================================================================================================
+[LINE]     LOC: MACHINE CODE                          SOURCE
+===================================================================================================
+ 
+[   1]        :                                       .model small
+[   2]        :                                       .stack 100h
+[   3]        :                                       .data
+[   4]    0100: 45 6E 74 65 72 20 61 20 73 74 72 69   start_msg db "Enter a string:",10,13,'$'
+                6E 67 3A 0A 0D 24                   
+[   5]    0112: 3C 6E 75 6D 62 65 72 3E               word_number db "<number>"
+[   6]    011A: C9                                    string  db 201                          ;,200,200,200
+[   7]    011B: 00                                    db ?
+[   8]    011C: 00 00 00 00 00 00 00 00 00 00 00 00   db 201 dup (?)
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00          
+[   9]        :                                       .code
+[  10]    01F0:                                       get_length proc
+[  11]    01F0: 58                                    pop ax
+[  12]    01F1: 5B                                    pop bx
+[  13]    01F2: 2B C3                                 sub ax, bx
+[  14]    01F4: 50                                    push ax
+[  15]    01F5: C3                                    ret
+[  16]        :                                       get_length endp
+[  17]        :                                       
+[  18]        :                                       left_shift_with_insert macro count, str, word  ;//8, string, <number>
+[  19]        :                                       pop dx                                  ;//достаём конец слова
+[  20]        :                                       push di                                 ;//сохраняем конец слова
+[  21]        :                                       push si                                 ;//сохраняем пробел
+[  22]        :                                       mov si, dx                              ;//помещаем конец слова в si
+[  23]        :                                       xor ax, ax
+[  24]        :                                       mov al, byte ptr [str + 1]              ;//Прямая?(ptr)
+[  25]        :                                       mov di, offset str + 2                  ;//относительная косвенная?
+[  26]        :                                       add di, ax                              ;//Сумма
+[  27]        :                                       inc di                                  ;//Увеличение на 1 (смещение вправо)
+[  28]        :                                       shift_loop:
+[  29]        :                                       dec di                              ;//Уменьшение на 1 (смещение влево)
+[  30]        :                                       mov al, byte ptr ds:[di]            ;//Прямая?(ptr) Косвенная (ds:[di])?
+[  31]        :                                       mov byte ptr ds:[di+8], al
+[  32]        :                                       cmp di, si
+[  33]        :                                       je  _insert_word
+[  34]        :                                       jmp shift_loop
+[  35]        :                                       _insert_word:
+[  36]        :                                       mov di, offset word
+[  37]        :                                       xor cx, cx
+[  38]        :                                       mov cx, 8                           ;//Непосредственная
+[  39]        :                                       _insert_word_loop:
+[  40]        :                                       mov al, [di]                    ;//Косвенная(индексная)
+[  41]        :                                       mov [si], al
+[  42]        :                                       inc di
+[  43]        :                                       inc si
+[  44]        :                                       loop _insert_word_loop
+[  45]        :                                       
+[  46]        :                                       mov si, dx
+[  47]        :                                       xor ax, ax
+[  48]        :                                       mov al, byte ptr [str + 1]
+[  49]        :                                       mov di, offset str + 2
+[  50]        :                                       add di, ax
+[  51]        :                                       add di,8
+[  52]        :                                       add si,8
+[  53]        :                                       inc di
+[  54]        :                                       xor cx,cx
+[  55]        :                                       
+[  56]        :                                       _loop_this:
+[  57]        :                                       dec di
+[  58]        :                                       cmp di, si
+[  59]        :                                       jne _loop_this
+[  60]        :                                       inc cx
+[  61]        :                                       mov ah, ' '
+[  62]        :                                       mov al, [di]
+[  63]        :                                       cmp ah,al
+[  64]        :                                       je _exit_shift
+[  65]        :                                       mov ah, '$'
+[  66]        :                                       mov al, [di]
+[  67]        :                                       cmp ah,al
+[  68]        :                                       je _exit_shift
+[  69]        :                                       
+[  70]        :                                       _swap_to_end:
+[  71]        :                                       mov al, byte ptr ds:[di+1]
+[  72]        :                                       mov byte ptr ds:[di], al
+[  73]        :                                       inc di
+[  74]        :                                       mov ah, '$'
+[  75]        :                                       mov al, [di]
+[  76]        :                                       cmp ah,al
+[  77]        :                                       jne _swap_to_end
+[  78]        :                                       jmp _loop_this
+[  79]        :                                       
+[  80]        :                                       jmp _exit_shift
+[  81]        :                                       _exit_shift:
+[  82]        :                                       pop si
+[  83]        :                                       pop di
+[  84]        :                                       endm
+[  85]        :                                       
+[  86]        :                                       
+[  87]    01F6:                                       _start:
+[  88]    01F6: B8 10 00                              mov ax, @data
+[  89]    01F9: 8E D8                                 mov ds, ax
+[  90]        :                                       
+[  91]    01FB:                                       _start_msg:								;//Вывод стартового сообщения
+[  92]    01FB: BA 00 00                              mov dx, offset start_msg
+[  93]    01FE: B4 09                                 mov ah, 0x9
+[  94]    0200: CD 21                                 int 0x21
+[  95]    0202: BA 1A 00                              mov dx, offset string				;//Ввод строки
+[  96]    0205: B4 0A                                 mov ah, 0x0A
+[  97]    0207: CD 21                                 int 21h
+[  98]        :                                       
+[  99]    0209:                                       _check_string_length:
+[ 100]    0209: 32 E4                                 xor ah, ah
+[ 101]    020B: 33 F6                                 xor si, si
+[ 102]    020D: BE 1B 00                              mov si, offset string + 1	
+[ 103]    0210: 8A 04                                 mov al, byte ptr[si]
+[ 104]    0212: 3C C9                                 cmp al, 201							;//Проверка на 200символов
+[ 105]    0214: 72 03 E9 44 01                        jae _exit_without_output
+[ 106]    0219: 3C 00                                 cmp al, 0							;//Проверка на 0 символов
+[ 107]    021B: 75 03 E9 3D 01                        je _exit_without_output
+[ 108]    0220: EB 00                                 jmp _replace_enter
+[ 109]        :                                       
+[ 110]    0222:                                       _replace_enter:
+[ 111]    0222: 33 F6                                 xor si, si
+[ 112]    0224: BE 1B 00                              mov si, offset string + 1
+[ 113]    0227: 32 ED                                 xor ch, ch
+[ 114]    0229: 8A 0C                                 mov cl, [si]
+[ 115]    022B: 41                                    inc cx
+[ 116]    022C: 03 F1                                 add si,cx                           ;//увеличиваем счётчик на длину string+2
+[ 117]    022E: B0 24                                 mov al, '$'
+[ 118]    0230: 88 04                                 mov [si], al                        ;//Добавляем символ в конец
+[ 119]        :                                       
+[ 120]    0232:                                       _prepare_for_searching_words:
+[ 121]    0232: BF 1C 00                              mov di, offset string + 2
+[ 122]    0235: 33 C0                                 xor ax, ax
+[ 123]    0237: B0 20                                 mov al, 32                          ;//указываем пробел
+[ 124]    0239: 33 C9                                 xor cx, cx
+[ 125]    023B: 8A 0E 1B 00                           mov cl, byte ptr[string + 1]        ;//передаём ссылку на начало строки
+[ 126]    023F: 41                                    inc cx
+[ 127]    0240: EB 14                                 jmp _find_word                      ;// al = ' ', cl=&string
+[ 128]        :                                       
+[ 129]    0242:                                       _inc_dest_index:
+[ 130]    0242: 8B FE                                 mov di, si                         ;//первый символ
+[ 131]    0244: 47                                    inc di
+[ 132]    0245: 33 C0                                 xor ax, ax
+[ 133]    0247: B4 24                                 mov ah, '$'
+[ 134]    0249: 8A 05                                 mov al, [di]                        ;//сравниваем с концом строки
+[ 135]    024B: 47                                    inc di
+[ 136]    024C: 59                                    pop cx
+[ 137]    024D: 3A E0                                 cmp ah, al
+[ 138]    024F: 75 03 E9 0D 01                        je _exit
+[ 139]    0254: EB 00                                 jmp _find_word
+[ 140]        :                                       
+[ 141]    0256:                                       _find_word:
+[ 142]    0256: 57                                    push di                         ;//загоняем в стек di = string+2
+[ 143]    0257: EB 00                                 jmp _start_searching_word       ;// ss = {di=string+2}
+[ 144]        :                                       
+[ 145]    0259:                                       _start_searching_word:
+[ 146]    0259: 8A 25                                 mov ah, [di]                    ;//передаём первый символ из di в ah, при этом al=' '
+[ 147]    025B: 47                                    inc di
+[ 148]    025C: 3A C4                                 cmp al, ah
+[ 149]    025E: 74 34                                 je _check_is_number             ;//нашли пробел
+[ 150]    0260: E2 F7                                 loop _start_searching_word
+[ 151]    0262: EB 30                                 jmp _check_is_number            ;//конец строки
+[ 152]        :                                       
+[ 153]        :                                       
+[ 154]    0264:                                       _check_is_number_last:
+[ 155]    0264: 4F                                    dec di
+[ 156]    0265: 8B F7                                 mov si, di
+[ 157]    0267: 5F                                    pop di
+[ 158]    0268: 51                                    push cx
+[ 159]    0269: 33 D2                                 xor dx, dx
+[ 160]    026B: 8B D7                                 mov dx, di
+[ 161]    026D: 4F                                    dec di
+[ 162]    026E: 33 C0                                 xor ax, ax
+[ 163]    0270: 3B FE                                 cmp di, si
+[ 164]    0272: 74 CE                                 je _inc_dest_index
+[ 165]    0274: EB 00                                 jmp _start_cheking_last
+[ 166]        :                                       
+[ 167]    0276:                                       _start_cheking_last:
+[ 168]    0276: 3B FE                                 cmp di, si
+[ 169]    0278: 75 03 E9 C9 00                        je _out_founded_word
+[ 170]    027D: 47                                    inc di
+[ 171]    027E: B4 30                                 mov ah, "0"
+[ 172]    0280: 8A 05                                 mov al, [di]
+[ 173]    0282: 3A C4                                 cmp al, ah
+[ 174]    0284: 7D 03 E9 D8 00                        jl _exit
+[ 175]    0289: B4 39                                 mov ah, "9"
+[ 176]    028B: 3A C4                                 cmp al, ah
+[ 177]    028D: 7E 03 E9 CF 00                        jg _exit
+[ 178]    0292: EB E2                                 jmp _start_cheking_last
+[ 179]        :                                       
+[ 180]    0294:                                       _check_is_number:
+[ 181]    0294: 49                                    dec cx
+[ 182]    0295: 83 EF 02                              sub di, 2                   ;//разность
+[ 183]    0298: 8B F7                                 mov si, di                  ;//положение первого сивола
+[ 184]    029A: 5F                                    pop di
+[ 185]    029B: 51                                    push cx
+[ 186]    029C: 33 D2                                 xor dx, dx
+[ 187]    029E: 8B D7                                 mov dx, di                  ;//запоминаем положение символа
+[ 188]    02A0: 4F                                    dec di
+[ 189]    02A1: 33 C0                                 xor ax, ax
+[ 190]    02A3: 3B FE                                 cmp di, si
+[ 191]    02A5: 74 9B                                 je _inc_dest_index
+[ 192]    02A7: EB 00                                 jmp _start_cheking
+[ 193]        :                                       
+[ 194]    02A9:                                       _start_cheking:
+[ 195]    02A9: 3B FE                                 cmp di, si                  ;//si = ' ',di = string
+[ 196]    02AB: 74 11                                 je _insert_word_number
+[ 197]    02AD: 47                                    inc di
+[ 198]    02AE: B4 30                                 mov ah, "0"
+[ 199]    02B0: 8A 05                                 mov al, [di]
+[ 200]    02B2: 3A C4                                 cmp al, ah
+[ 201]    02B4: 7C 8C                                 jl _inc_dest_index
+[ 202]    02B6: B4 39                                 mov ah, "9"
+[ 203]    02B8: 3A C4                                 cmp al, ah
+[ 204]    02BA: 7F 86                                 jg _inc_dest_index
+[ 205]    02BC: EB EB                                 jmp _start_cheking
+[ 206]        :                                       
+[ 207]    02BE:                                       _insert_word_number:
+[ 208]    02BE: 52                                    push dx                     ;//в стек отправляем конец слова (числа)
+[ 209]    02BF: 5A 57 56 8B F2 33 C0 A0 1B 00 BF 1C   left_shift_with_insert 8, string, word_number
+                00 03 F8 47 4F 3E 8A 05 3E 88 45 08 
+                3B FE 74 02 EB F2 BF 12 00 33 C9 B9 
+                08 00 8A 05 88 04 47 46 E2 F8 8B F2 
+                33 C0 A0 1B 00 BF 1C 00 03 F8 83 C7 
+                08 83 C6 08 47 33 C9 4F 3B FE 75 FB 
+                41 B4 20 8A 05 3A E0 74 1C B4 24 8A 
+                05 3A E0 74 14 3E 8A 45 01 3E 88 05 
+                47 B4 24 8A 05 3A E0 75 F0 EB D8 EB 
+                00 5E 5F                            
+[ 210]    032E: 49                                    dec cx
+[ 211]    032F: 2B F1                                 sub si, cx
+[ 212]    0331: 83 C7 08                              add di, 8
+[ 213]    0334: 83 C6 08                              add si, 8
+[ 214]    0337: 33 C0                                 xor ax, ax
+[ 215]    0339: A0 1B 00                              mov al, byte ptr[string+1]
+[ 216]    033C: 04 08                                 add al, 8
+[ 217]    033E: 2A C5                                 sub al, ch
+[ 218]    0340: A2 1B 00                              mov byte ptr[string+1], al
+[ 219]    0343: E9 FC FE                              jmp _inc_dest_index
+[ 220]        :                                       
+[ 221]        :                                       
+[ 222]        :                                       
+[ 223]    0346:                                       _out_founded_word:
+[ 224]    0346: 8B FA                                 mov di, dx
+[ 225]    0348: 4F                                    dec di
+[ 226]    0349: 33 D2                                 xor dx, dx
+[ 227]    034B: EB 00                                 jmp _print_word
+[ 228]    034D:                                       _print_word:
+[ 229]    034D: 47                                    inc di
+[ 230]    034E: 8A 15                                 mov dl, [di]
+[ 231]    0350: B4 02                                 mov ah, 0x2
+[ 232]    0352: CD 21                                 int 0x21
+[ 233]    0354: 3B F7                                 cmp si, di
+[ 234]    0356: 75 F5                                 jne _print_word
+[ 235]    0358: 75 03 E9 E5 FE                        je _inc_dest_index
+[ 236]        :                                       
+[ 237]    035D:                                       _exit_without_output:
+[ 238]    035D: B4 4C                                 mov ah, 0x4c
+[ 239]    035F: CD 21                                 int 0x21
+[ 240]        :                                       
+[ 241]    0361:                                       _exit:
+[ 242]    0361: B2 0A                                 mov dl, 10;
+[ 243]    0363: B4 02                                 mov ah, 0x02;
+[ 244]    0365: CD 21                                 int 0x21
+[ 245]    0367: B2 0D                                 mov dl, 13;
+[ 246]    0369: B4 02                                 mov ah, 0x02;
+[ 247]    036B: CD 21                                 int 0x21
+[ 248]    036D: BA 1C 00                              mov dx, offset string + 2
+[ 249]    0370: B4 09                                 mov ah, 0x09
+[ 250]    0372: CD 21                                 int 0x21
+[ 251]        :                                       ;mov dx, offset string + 257
+[ 252]        :                                       ;mov ah, 0x09
+[ 253]        :                                       ;int 0x21
+[ 254]        :                                       ;mov dx, offset string + 512
+[ 255]        :                                       ;mov ah, 0x09
+[ 256]        :                                       ;int 0x21
+[ 257]    0374: B4 4C                                 mov ah, 0x4c
+[ 258]    0376: CD 21                                 int 0x21
+[ 259]        :                                       end _start
+[ 260]        :                                       
+ 
+===================================================================================================
+ 
+EXE HEADER - bytes from 0000 to 01FF inclusive.
+
+0000: 4D      -   exe signature (M)
+0001: 5A      -   exe signature (Z)
+0002: 78      -   bytes on last page (l.byte)
+0003: 01      -   bytes on last page (h.byte)
+0004: 03      -   512 byte pages in file (l.byte)
+0005: 00      -   512 byte pages in file (h.byte)
+0006: 01      -   relocations (l.byte)
+0007: 00      -   relocations (h.byte)
+0008: 20      -   paragraphs in header (l.byte)
+0009: 00      -   paragraphs in header (h.byte)
+000A: 00      -   minimum memory (l.byte)
+000B: 00      -   minimum memory (h.byte)
+000C: FF      -   maximum memory (l.byte)
+000D: FF      -   maximum memory (h.byte)
+000E: 00      -   SS - stack segment (l.byte)
+000F: 00      -   SS - stack segment (h.byte)
+0010: 00      -   SP - stack pointer (l.byte)
+0011: 01      -   SP - stack pointer (h.byte)
+0012: 3C      -   check sum (l.byte)
+0013: B5      -   check sum (h.byte)
+0014: 06      -   IP - instruction pointer (l.byte)
+0015: 00      -   IP - instruction pointer (h.byte)
+0016: 1F      -   CS - code segment (l.byte)
+0017: 00      -   CS - code segment (h.byte)
+0018: 1E      -   relocation table adress (l.byte)
+0019: 00      -   relocation table adress (h.byte)
+001A: 00      -   overlay number (l.byte)
+001B: 00      -   overlay number (h.byte)
+001C: 01      -   signature (l.byte)
+001D: 00      -   signature (h.byte)
+001E: 07      -   relocation table - offset inside segment (l.byte)
+001F: 00      -   relocation table - offset inside segment (h.byte)
+0020: 1F      -   relocation table - segment anchor (l.byte)
+0021: 00      -   relocation table - segment anchor (h.byte)
+0022 to 01FF  -   reserved relocation area  (00) 
+
+
+
+
+===================================================================================================

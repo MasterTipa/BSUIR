@@ -1,0 +1,38 @@
+< THE SYMBOL TABLE >  2_work.exe  --  emu8086 assembler version: 4.05 
+===================================================================================================
+Name                     	Offset    	Size      	Type      	Segment   
+===================================================================================================
+STACK                    	00000     	-5        	SEGMENT   	(ITSELF)  
+DATA                     	00010     	-5        	SEGMENT   	(ITSELF)  
+START_MSG                	00000     	1         	VAR       	data      
+WORD_NUMBER              	00012     	1         	VAR       	data      
+STRING                   	0001A     	1         	VAR       	data      
+CODE                     	0001F     	-5        	SEGMENT   	(ITSELF)  
+GET_LENGTH               	00000     	-1        	NEAR      	code      
+_START                   	00006     	-1        	LABEL     	code      
+_START_MSG               	0000B     	-1        	LABEL     	code      
+_CHECK_STRING_LENGTH     	00019     	-1        	LABEL     	code      
+_REPLACE_ENTER           	00032     	-1        	LABEL     	code      
+_PREPARE_FOR_SEARCHING_WORDS	00042     	-1        	LABEL     	code      
+_INC_DEST_INDEX          	00052     	-1        	LABEL     	code      
+_FIND_WORD               	00066     	-1        	LABEL     	code      
+_START_SEARCHING_WORD    	00069     	-1        	LABEL     	code      
+_CHECK_IS_NUMBER_LAST    	00074     	-1        	LABEL     	code      
+_START_CHEKING_LAST      	00086     	-1        	LABEL     	code      
+_CHECK_IS_NUMBER         	000A4     	-1        	LABEL     	code      
+_START_CHEKING           	000B9     	-1        	LABEL     	code      
+_INSERT_WORD_NUMBER      	000CE     	-1        	LABEL     	code      
+SHIFT_LOOP               	000DF     	-1        	LABEL     	code      
+_INSERT_WORD             	000ED     	-1        	LABEL     	code      
+_INSERT_WORD_LOOP        	000F5     	-1        	LABEL     	code      
+_LOOP_THIS               	00112     	-1        	LABEL     	code      
+_SWAP_TO_END             	00128     	-1        	LABEL     	code      
+_EXIT_SHIFT              	0013C     	-1        	LABEL     	code      
+_OUT_FOUNDED_WORD        	00156     	-1        	LABEL     	code      
+_PRINT_WORD              	0015D     	-1        	LABEL     	code      
+_EXIT_WITHOUT_OUTPUT     	0016D     	-1        	LABEL     	code      
+_EXIT                    	00171     	-1        	LABEL     	code      
+===================================================================================================
+[ 23.03.2021  --  0:18:21 ] 
+< END >
+ 
