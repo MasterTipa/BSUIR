@@ -1,0 +1,3 @@
+Для создания *.exe в терминале необходимо ввести следующую команду
+pyinstaller --onefile main
+D:\BSUIR\5_sem\TOKS\lab
