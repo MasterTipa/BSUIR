@@ -1,0 +1,21 @@
+|Lab1RgstrSdv
+a0 <= inst.DB_MAX_OUTPUT_PORT_TYPE
+CLR => inst30.IN0
+C => inst.CLK
+C => inst2.CLK
+C => inst3.CLK
+C => inst4.CLK
+C => inst5.CLK
+C => inst6.CLK
+C => inst7.CLK
+C => inst8.CLK
+D0 => inst.DATAIN
+a1 <= inst2.DB_MAX_OUTPUT_PORT_TYPE
+a2 <= inst3.DB_MAX_OUTPUT_PORT_TYPE
+a3 <= inst4.DB_MAX_OUTPUT_PORT_TYPE
+a4 <= inst5.DB_MAX_OUTPUT_PORT_TYPE
+a5 <= inst6.DB_MAX_OUTPUT_PORT_TYPE
+a6 <= inst7.DB_MAX_OUTPUT_PORT_TYPE
+a7 <= inst8.DB_MAX_OUTPUT_PORT_TYPE
+
+
