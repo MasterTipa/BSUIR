@@ -1,0 +1,3 @@
+﻿  Source.cpp
+F:\Programming Projects\Selection sort\Selection sort\Source.cpp(5,33): warning C4101:  memory: неиспользованная локальная переменная
+  Selection sort.vcxproj -> F:\Programming Projects\Selection sort\Debug\Selection sort.exe
