@@ -1,0 +1,4 @@
+﻿  Bees.cpp
+D:\Bees\Bees\Bees.cpp(11,12): warning C4101: out: неиспользованная локальная переменная
+D:\Bees\Bees\Bees.cpp(53,10): warning C4018: >=: несоответствие типов со знаком и без знака
+  Bees.vcxproj -> D:\Bees\Debug\Bees.exe
