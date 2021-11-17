@@ -1,0 +1,2 @@
+c+++ , 2
+int gg;printf("%s","LOL");nt j=99;printf("%d",i);
