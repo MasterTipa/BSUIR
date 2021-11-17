@@ -1,0 +1,54 @@
+< THE SYMBOL TABLE >  3.exe  --  emu8086 assembler version: 4.05 
+===================================================================================================
+Name                     	Offset    	Size      	Type      	Segment   
+===================================================================================================
+STACK                    	00000     	-5        	SEGMENT   	(ITSELF)  
+DATA                     	00010     	-5        	SEGMENT   	(ITSELF)  
+INPUT_TEXT               	00000     	1         	VAR       	data      
+ERROR                    	00014     	1         	VAR       	data      
+MSG_AND                  	00027     	1         	VAR       	data      
+MSG_OR                   	0002E     	1         	VAR       	data      
+MSG_XOR                  	00034     	1         	VAR       	data      
+MSG_NOT1                 	0003B     	1         	VAR       	data      
+MSG_NOT2                 	00043     	1         	VAR       	data      
+MSG_NUMBER               	0004B     	1         	VAR       	data      
+MAX_ZN                   	0005A     	1         	VAR       	data      
+BUFF                     	00060     	2         	VAR       	data      
+NUMBER1                  	00072     	2         	VAR       	data      
+NUMBER2                  	00074     	2         	VAR       	data      
+SIGN1                    	00076     	2         	VAR       	data      
+SIGN2                    	00078     	2         	VAR       	data      
+ANS                      	0007A     	2         	VAR       	data      
+CODE                     	00019     	-5        	SEGMENT   	(ITSELF)  
+_XOR_PROC                	00000     	-1        	NEAR      	code      
+_INVERSE_                	0000B     	-1        	NEAR      	code      
+_SET_ONE                 	00015     	-1        	LABEL     	code      
+_RET_END                 	00018     	-1        	LABEL     	code      
+_INPUT_NUMBER            	00019     	-1        	NEAR      	code      
+_FIRST_STEP              	0003E     	-1        	LABEL     	code      
+_EXIT_ERROR              	0006E     	-1        	LABEL     	code      
+_EXIT_ZERO               	00079     	-1        	LABEL     	code      
+_EXIT_INT                	0007E     	-1        	LABEL     	code      
+_EXIT_CHECK              	00087     	-1        	LABEL     	code      
+_RET                     	0008B     	-1        	LABEL     	code      
+_CLEAN_ANS               	0008C     	-1        	NEAR      	code      
+_LOOP_CLEANING           	00097     	-1        	LABEL     	code      
+_OUTPUT_NUMBER           	000A0     	-1        	NEAR      	code      
+POSITIVE                 	000A8     	-1        	LABEL     	code      
+_LOOP                    	000B4     	-1        	LABEL     	code      
+DXING                    	000C5     	-1        	LABEL     	code      
+STRINGING                	000D1     	-1        	LABEL     	code      
+_LOOP_THIS               	000E5     	-1        	LABEL     	code      
+RETURN                   	000EC     	-1        	LABEL     	code      
+_START                   	00101     	-1        	LABEL     	code      
+_LOGICAL_BYTE_OPERATION_AND	00142     	-1        	LABEL     	code      
+_LOGICAL_BYTE_OPERATION_OR	00168     	-1        	LABEL     	code      
+_LOGICAL_BYTE_OPERATION_XOR	0018E     	-1        	LABEL     	code      
+_LOGICAL_BYTE_OPERATION_NOT1	001B4     	-1        	LABEL     	code      
+_LOGICAL_BYTE_OPERATION_NOT2	001D3     	-1        	LABEL     	code      
+_EXIT                    	001EF     	-1        	LABEL     	code      
+_EXIT_WITHOUT_OUTPUT     	001F3     	-1        	LABEL     	code      
+===================================================================================================
+[ 15.04.2021  --  20:14:28 ] 
+< END >
+ 

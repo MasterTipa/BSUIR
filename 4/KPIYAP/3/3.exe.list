@@ -1,0 +1,339 @@
+EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
+ 
+3.exe -- emu8086 assembler version: 4.05  
+ 
+[ 15.04.2021  --  20:14:28 ] 
+ 
+===================================================================================================
+[LINE]     LOC: MACHINE CODE                          SOURCE
+===================================================================================================
+ 
+[   1]        :                                       .model small
+[   2]        :                                       .stack 100h
+[   3]        :                                       .data
+[   4]    0100: 0A 0D 45 6E 74 65 72 20 61 20 4E 75   input_text db 10,13,"Enter a Number :",10,13,'$'
+                6D 62 65 72 3A 0A 0D 24             
+[   5]    0114: 0A 0D 69 6E 63 6F 72 72 65 63 74 20   error db 10,13,"incorrect number$"
+                6E 75 6D 62 65 72 24                
+[   6]    0127: 0A 0D 41 4E 44 3A 24                  msg_and db 10,13,"AND:$"
+[   7]    012E: 0A 0D 4F 52 3A 24                     msg_or db 10,13,"OR:$"
+[   8]    0134: 0A 0D 58 4F 52 3A 24                  msg_xor db 10,13,"XOR:$"
+[   9]    013B: 0A 0D 4E 4F 54 31 3A 24               msg_not1 db 10,13,"NOT1:$"
+[  10]    0143: 0A 0D 4E 4F 54 32 3A 24               msg_not2 db 10,13,"NOT2:$"
+[  11]    014B: 0A 0D 59 6F 75 72 20 4E 75 6D 62 65   msg_number db 10,13,"Your Number:$"
+                72 3A 24                            
+[  12]    015A: 05 33 32 37 36 37                     max_zn db 5,"32767"
+[  13]    0160: 07 00 00 00 00 00 00 00 00 00 00 00   buff dw 7,8 Dup(?)
+                00 00 00 00 00 00                   
+[  14]    0172: 00 00                                 Number1 dw ?
+[  15]    0174: 00 00                                 Number2 dw ?
+[  16]    0176: 00 00                                 sign1 dw ?
+[  17]    0178: 00 00                                 sign2 dw ?
+[  18]    017A: 00 00 00 00 00 00 00 00 00 00 00 00   ans dw 7 dup (?),'$'
+                00 00 24 00                         
+[  19]        :                                       .code
+[  20]    0190:                                       _xor_proc proc          ; NEAR=TINY SMALL COMPACT , else (FAR)
+[  21]    0190: 33 F6                                 xor si,si
+[  22]    0192: 33 FF                                 xor di,di
+[  23]    0194: 33 DB                                 xor bx,bx
+[  24]    0196: 33 C0                                 xor ax,ax
+[  25]    0198: 33 D2                                 xor dx,dx
+[  26]    019A: C3                                    ret
+[  27]        :                                       _xor_proc endp
+[  28]    019B:                                       _inverse_ proc
+[  29]    019B: 83 FF 00                              cmp di,0
+[  30]    019E: 74 05                                 je _set_one
+[  31]    01A0: BF 00 00                              mov di,0
+[  32]    01A3: EB 03                                 jmp _ret_end
+[  33]    01A5:                                       _set_one:
+[  34]    01A5: BF 01 00                              mov di,1
+[  35]    01A8:                                       _ret_end:
+[  36]    01A8: C3                                    ret
+[  37]        :                                       _inverse_ endp
+[  38]    01A9:                                       _input_number proc
+[  39]        :                                       
+[  40]    01A9: BA 00 00                              mov dx, offset input_text
+[  41]    01AC: B4 09                                 mov ah, 0x9
+[  42]    01AE: CD 21                                 int 0x21
+[  43]    01B0: BA 60 00                              mov dx, offset buff				
+[  44]    01B3: B4 0A                                 mov ah, 0x0A
+[  45]    01B5: CD 21                                 int 21h
+[  46]    01B7: 33 FF                                 xor di,di
+[  47]    01B9: 33 DB                                 xor bx,bx
+[  48]    01BB: 33 C0                                 xor ax,ax
+[  49]        :                                       ;mov cx,offset max_zn
+[  50]    01BD: BE 62 00                              mov si,offset buff+2
+[  51]    01C0: 80 3C 2D                              cmp byte ptr [si],'-'
+[  52]    01C3: 75 09                                 jne _first_step
+[  53]    01C5: BF 01 00                              mov di,1
+[  54]    01C8: 46                                    inc si
+[  55]    01C9: 80 3C 30                              cmp byte ptr[si],'0'
+[  56]    01CC: 74 3B                                 je _exit_zero
+[  57]    01CE:                                       _first_step:
+[  58]    01CE: 80 3C 0D                              cmp byte ptr[si], 0dh
+[  59]    01D1: 74 3B                                 je _exit_int
+[  60]    01D3: 80 3C 20                              cmp byte ptr[si], ' '
+[  61]    01D6: 74 26                                 je _exit_error
+[  62]    01D8: 80 3C 30                              cmp byte ptr[si], '0'
+[  63]    01DB: 7C 21                                 jl _exit_error          ;если меньше (or l)
+[  64]    01DD: 80 3C 39                              cmp byte ptr[si], '9'
+[  65]    01E0: 7F 1C                                 jg _exit_error          ;если больше (or a)
+[  66]    01E2: B3 0A                                 mov bl, 10
+[  67]    01E4: F7 E3                                 mul bx                  ; * (IMUL)
+[  68]    01E6: 72 16                                 jc _exit_error          ;есть переполнение (OF=1)
+[  69]    01E8: 83 FA 00                              cmp dx,0
+[  70]    01EB: 75 11                                 jnz _exit_error
+[  71]    01ED: 8A 1C                                 mov bl, byte ptr [si]
+[  72]    01EF: 80 EB 30                              sub bl, '0'             ; - (SBB)
+[  73]    01F2: 03 C3                                 add ax, bx              ; + (ADC)
+[  74]    01F4: 72 08                                 jc _exit_error
+[  75]    01F6: 3D 00 80                              cmp ax,8000h
+[  76]    01F9: 77 03                                 ja _exit_error
+[  77]    01FB: 46                                    inc si
+[  78]    01FC: EB D0                                 jmp _first_step
+[  79]        :                                       
+[  80]    01FE:                                       _exit_error:
+[  81]    01FE: BA 14 00                              mov dx,offset error
+[  82]    0201: B8 00 09                              mov ax,0x0900
+[  83]    0204: CD 21                                 int 21h
+[  84]    0206: E9 7A 01                              jmp _exit_without_output:
+[  85]    0209:                                       _exit_zero:
+[  86]    0209: BF 00 00                              mov di,0
+[  87]    020C: EB 0D                                 jmp _ret
+[  88]    020E:                                       _exit_int:
+[  89]    020E: 83 FF 01                              cmp di,1
+[  90]    0211: 75 04                                 jne _exit_check
+[  91]    0213: F7 D8                                 neg ax                  ;dop code
+[  92]    0215: EB 04                                 jmp _ret
+[  93]    0217:                                       _exit_check:
+[  94]    0217: 0B C0                                 or ax,ax
+[  95]    0219: 78 E3                                 js _exit_error
+[  96]    021B:                                       _ret:
+[  97]        :                                       
+[  98]    021B: C3                                    ret
+[  99]        :                                       _input_number endp
+[ 100]    021C:                                       _clean_ans proc
+[ 101]    021C: B9 06 00                              mov cx,6
+[ 102]    021F: 33 FF                                 xor di,di
+[ 103]    0221: 47                                    inc di              ;+1
+[ 104]    0222: C7 45 7A 30 00                        mov [ans+di],'0'
+[ 105]    0227:                                       _loop_cleaning:
+[ 106]        :                                       ;lea dx,ans
+[ 107]    0227: C7 45 7A 24 00                        mov [ans+di],'$'
+[ 108]    022C: 47                                    inc di              ;+1
+[ 109]    022D: E2 F8                                 loop _loop_cleaning
+[ 110]    022F: C3                                    ret
+[ 111]        :                                       _clean_ans endp
+[ 112]    0230:                                       _output_number proc
+[ 113]    0230: 50                                    push ax
+[ 114]    0231: 83 FF 00                              cmp di,0
+[ 115]    0234: 74 02                                 je positive
+[ 116]    0236: F7 D8                                 neg ax
+[ 117]    0238:                                       positive:
+[ 118]    0238: BB 0A 00                              mov bx,10
+[ 119]    023B: B9 00 00                              mov cx,0
+[ 120]    023E: C7 06 7A 00 30 00                     mov [ans],'0'
+[ 121]        :                                       
+[ 122]    0244:                                       _loop:
+[ 123]    0244: BA 00 00                              mov dx,0
+[ 124]    0247: F7 F3                                 div bx          ;/ (IDIV)
+[ 125]    0249: 3D 00 00                              cmp ax,0
+[ 126]    024C: 74 07                                 je dxing
+[ 127]    024E: 83 C2 30                              add dx,'0'
+[ 128]    0251: 52                                    push dx
+[ 129]    0252: 41                                    inc cx
+[ 130]    0253: EB EF                                 jmp _loop
+[ 131]        :                                       
+[ 132]    0255:                                       dxing:
+[ 133]    0255: 83 FA 00                              cmp dx,0
+[ 134]    0258: 74 07                                 je stringing
+[ 135]    025A: 83 C2 30                              add dx,'0'
+[ 136]    025D: 52                                    push dx
+[ 137]    025E: 41                                    inc cx
+[ 138]    025F: EB 00                                 jmp stringing
+[ 139]        :                                       
+[ 140]    0261:                                       stringing:
+[ 141]    0261: 83 F9 00                              cmp cx,0
+[ 142]    0264: 74 16                                 je return
+[ 143]    0266: BA 7A 00                              lea dx,ans
+[ 144]    0269: 83 FF 00                              cmp di,0
+[ 145]    026C: 74 07                                 je _loop_this
+[ 146]    026E: 4F                                    dec di
+[ 147]    026F: C7 45 7A 2D 00                        mov [ans+di],'-'
+[ 148]    0274: 47                                    inc di
+[ 149]        :                                       
+[ 150]    0275:                                       _loop_this:
+[ 151]    0275: 58                                    pop ax
+[ 152]    0276: 89 45 7A                              mov [ans+di],ax
+[ 153]    0279: 47                                    inc di
+[ 154]    027A: E2 F9                                 loop _loop_this
+[ 155]    027C:                                       return:
+[ 156]    027C: 58                                    pop ax
+[ 157]    027D: B2 0A                                 mov dl, 10;
+[ 158]    027F: B4 02                                 mov ah, 0x02;
+[ 159]    0281: CD 21                                 int 0x21
+[ 160]    0283: B2 0D                                 mov dl, 13;
+[ 161]    0285: B4 02                                 mov ah, 0x02;
+[ 162]    0287: CD 21                                 int 0x21
+[ 163]    0289: BA 7A 00                              mov dx, offset ans
+[ 164]    028C: B4 09                                 mov ah, 0x09
+[ 165]    028E: CD 21                                 int 0x21
+[ 166]    0290: C3                                    ret
+[ 167]        :                                       
+[ 168]        :                                       _output_number endp
+[ 169]        :                                       
+[ 170]    0291:                                       _start:
+[ 171]    0291: B8 10 00                              mov ax, @data
+[ 172]    0294: 8E D8                                 mov ds, ax
+[ 173]        :                                       
+[ 174]    0296: E8 10 FF                              call _input_number
+[ 175]    0299: A3 72 00                              mov Number1, ax
+[ 176]    029C: 89 3E 76 00                           mov sign1,di
+[ 177]    02A0: BA 4B 00                              mov dx,offset msg_number
+[ 178]    02A3: B4 09                                 mov ah,0x9
+[ 179]    02A5: CD 21                                 int 0x21
+[ 180]    02A7: A1 72 00                              mov ax,Number1
+[ 181]    02AA: 8B 3E 76 00                           mov di,sign1
+[ 182]    02AE: E8 7F FF                              call _output_number
+[ 183]    02B1: E8 68 FF                              call _clean_ans
+[ 184]    02B4: E8 F2 FE                              call _input_number
+[ 185]    02B7: A3 74 00                              mov Number2, ax
+[ 186]    02BA: 89 3E 78 00                           mov sign2,di
+[ 187]    02BE: BA 4B 00                              mov dx,offset msg_number
+[ 188]    02C1: B4 09                                 mov ah,0x9
+[ 189]    02C3: CD 21                                 int 0x21
+[ 190]    02C5: A1 74 00                              mov ax,Number2
+[ 191]    02C8: 8B 3E 78 00                           mov di,sign2
+[ 192]    02CC: E8 61 FF                              call _output_number
+[ 193]    02CF: E8 4A FF                              call _clean_ans
+[ 194]    02D2:                                       _logical_byte_operation_AND:
+[ 195]    02D2: BA 27 00                              mov dx, offset msg_and
+[ 196]    02D5: B4 09                                 mov ah, 0x9
+[ 197]    02D7: CD 21                                 int 0x21
+[ 198]    02D9: E8 B4 FE                              call _xor_proc
+[ 199]    02DC: 8B 1E 72 00                           mov bx,Number1
+[ 200]    02E0: 8B 16 74 00                           mov dx,Number2
+[ 201]    02E4: 23 D3                                 AND dx,bx
+[ 202]    02E6: 8B C2                                 mov ax,dx
+[ 203]    02E8: 8B 16 76 00                           mov dx,sign1
+[ 204]    02EC: 8B 3E 78 00                           mov di,sign2
+[ 205]    02F0: 23 FA                                 AND di,dx
+[ 206]    02F2: E8 3B FF                              call _output_number
+[ 207]    02F5: E8 24 FF                              call _clean_ans
+[ 208]    02F8:                                       _logical_byte_operation_OR:
+[ 209]    02F8: BA 2E 00                              mov dx, offset msg_or
+[ 210]    02FB: B4 09                                 mov ah, 0x9
+[ 211]    02FD: CD 21                                 int 0x21
+[ 212]    02FF: E8 8E FE                              call _xor_proc
+[ 213]    0302: 8B 1E 72 00                           mov bx,Number1
+[ 214]    0306: 8B 16 74 00                           mov dx,Number2
+[ 215]    030A: 0B D3                                 OR dx,bx
+[ 216]    030C: 8B C2                                 mov ax,dx
+[ 217]    030E: 8B 16 76 00                           mov dx,sign1
+[ 218]    0312: 8B 3E 78 00                           mov di,sign2
+[ 219]    0316: 0B FA                                 OR di,dx
+[ 220]    0318: E8 15 FF                              call _output_number
+[ 221]    031B: E8 FE FE                              call _clean_ans
+[ 222]    031E:                                       _logical_byte_operation_XOR:
+[ 223]    031E: BA 34 00                              mov dx, offset msg_xor
+[ 224]    0321: B4 09                                 mov ah, 0x9
+[ 225]    0323: CD 21                                 int 0x21
+[ 226]    0325: E8 68 FE                              call _xor_proc
+[ 227]    0328: 8B 1E 72 00                           mov bx,Number1
+[ 228]    032C: 8B 16 74 00                           mov dx,Number2
+[ 229]    0330: 33 D3                                 XOR dx,bx
+[ 230]    0332: 8B C2                                 mov ax,dx
+[ 231]    0334: 8B 16 76 00                           mov dx,sign1
+[ 232]    0338: 8B 3E 78 00                           mov di,sign2
+[ 233]    033C: 33 FA                                 XOR di,dx
+[ 234]    033E: E8 EF FE                              call _output_number
+[ 235]    0341: E8 D8 FE                              call _clean_ans
+[ 236]    0344:                                       _logical_byte_operation_NOT1:
+[ 237]    0344: BA 3B 00                              mov dx, offset msg_not1
+[ 238]    0347: B4 09                                 mov ah, 0x9
+[ 239]    0349: CD 21                                 int 0x21
+[ 240]    034B: E8 42 FE                              call _xor_proc
+[ 241]    034E: 8B 1E 72 00                           mov bx,Number1
+[ 242]    0352: F7 D3                                 NOT bx
+[ 243]    0354: 8B C3                                 mov ax,bx
+[ 244]    0356: 8B 3E 76 00                           mov di,sign1
+[ 245]        :                                       ;NOT di
+[ 246]    035A: E8 3E FE                              call _inverse_
+[ 247]    035D: E8 D0 FE                              call _output_number
+[ 248]    0360: E8 B9 FE                              call _clean_ans
+[ 249]    0363:                                       _logical_byte_operation_NOT2:
+[ 250]    0363: BA 43 00                              mov dx, offset msg_not2
+[ 251]    0366: B4 09                                 mov ah, 0x9
+[ 252]    0368: CD 21                                 int 0x21
+[ 253]    036A: E8 23 FE                              call _xor_proc
+[ 254]    036D: 8B 16 74 00                           mov dx,Number2
+[ 255]    0371: F7 D2                                 NOT dx
+[ 256]    0373: 8B C2                                 mov ax,dx
+[ 257]    0375: 8B 3E 78 00                           mov di,sign2
+[ 258]        :                                       ;NOT di
+[ 259]    0379: E8 1F FE                              call _inverse_
+[ 260]    037C: E8 B1 FE                              call _output_number
+[ 261]        :                                       
+[ 262]        :                                       ;   0000 0011 1100 1001  969
+[ 263]        :                                       ;   0000 0010 1011 1000  696
+[ 264]        :                                       ;A  0000 0010 1000 1000 +
+[ 265]        :                                       ;O  0000 0011 1111 1001 +
+[ 266]        :                                       ;X  0000 0001 0111 0001 +
+[ 267]        :                                       ;N1 1111 1100 0011 0110 +
+[ 268]        :                                       ;N2 1111 1101 0100 0111 +
+[ 269]        :                                       ;
+[ 270]    037F:                                       _exit:
+[ 271]    037F: B4 4C                                 mov ah, 0x4c
+[ 272]    0381: CD 21                                 int 0x21
+[ 273]        :                                       
+[ 274]    0383:                                       _exit_without_output:
+[ 275]    0383: B4 4C                                 mov ah, 0x4c
+[ 276]    0385: CD 21                                 int 0x21
+[ 277]        :                                       
+[ 278]        :                                       end _start
+[ 279]        :                                       
+ 
+===================================================================================================
+ 
+EXE HEADER - bytes from 0000 to 01FF inclusive.
+
+0000: 4D      -   exe signature (M)
+0001: 5A      -   exe signature (Z)
+0002: 87      -   bytes on last page (l.byte)
+0003: 01      -   bytes on last page (h.byte)
+0004: 03      -   512 byte pages in file (l.byte)
+0005: 00      -   512 byte pages in file (h.byte)
+0006: 01      -   relocations (l.byte)
+0007: 00      -   relocations (h.byte)
+0008: 20      -   paragraphs in header (l.byte)
+0009: 00      -   paragraphs in header (h.byte)
+000A: 00      -   minimum memory (l.byte)
+000B: 00      -   minimum memory (h.byte)
+000C: FF      -   maximum memory (l.byte)
+000D: FF      -   maximum memory (h.byte)
+000E: 00      -   SS - stack segment (l.byte)
+000F: 00      -   SS - stack segment (h.byte)
+0010: 00      -   SP - stack pointer (l.byte)
+0011: 01      -   SP - stack pointer (h.byte)
+0012: 63      -   check sum (l.byte)
+0013: 06      -   check sum (h.byte)
+0014: 01      -   IP - instruction pointer (l.byte)
+0015: 01      -   IP - instruction pointer (h.byte)
+0016: 19      -   CS - code segment (l.byte)
+0017: 00      -   CS - code segment (h.byte)
+0018: 1E      -   relocation table adress (l.byte)
+0019: 00      -   relocation table adress (h.byte)
+001A: 00      -   overlay number (l.byte)
+001B: 00      -   overlay number (h.byte)
+001C: 01      -   signature (l.byte)
+001D: 00      -   signature (h.byte)
+001E: 02      -   relocation table - offset inside segment (l.byte)
+001F: 01      -   relocation table - offset inside segment (h.byte)
+0020: 19      -   relocation table - segment anchor (l.byte)
+0021: 00      -   relocation table - segment anchor (h.byte)
+0022 to 01FF  -   reserved relocation area  (00) 
+
+
+
+
+===================================================================================================
