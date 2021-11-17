@@ -1,0 +1,41 @@
+< THE SYMBOL TABLE >  lab7.exe  --  emu8086 assembler version: 4.05 
+===================================================================================================
+Name                     	Offset    	Size      	Type      	Segment   
+===================================================================================================
+DATA                     	00000     	-5        	SEGMENT   	(ITSELF)  
+FILE_PATH                	00000     	1         	VAR       	data      
+LAST_INDEX               	00064     	2         	VAR       	data      
+INDEX_ARR                	00066     	1         	VAR       	data      
+COUNTER                  	0007A     	1         	VAR       	data      
+PATH                     	0007B     	1         	VAR       	data      
+BAD_ARGUMENTS_MSG        	000DF     	1         	VAR       	data      
+PROGRAM_PATH             	000E7     	1         	VAR       	data      
+PROGRAM_FULL_PATH        	0014B     	1         	VAR       	data      
+EPB                      	001AF     	2         	VAR       	data      
+COMMANDLINE              	001BD     	1         	VAR       	data      
+COMMAND_TEXT             	001C1     	1         	VAR       	data      
+STACK                    	00024     	-5        	SEGMENT   	(ITSELF)  
+CODE                     	00034     	-5        	SEGMENT   	(ITSELF)  
+START                    	00000     	-1        	LABEL     	code      
+GET_PATH                 	0001B     	-1        	LABEL     	code      
+N99                      	0002C     	-1        	LABEL     	code      
+TO_MASK                  	0002F     	-1        	LABEL     	code      
+TO_MASK2                 	00037     	-1        	LABEL     	code      
+N1                       	00078     	-1        	LABEL     	code      
+GET_FILE                 	00086     	-1        	LABEL     	code      
+N98                      	00095     	-1        	LABEL     	code      
+OPEN_PROG                	00095     	-1        	LABEL     	code      
+GET_FULL_NAME            	0009C     	-1        	LABEL     	code      
+N2                       	000AD     	-1        	LABEL     	code      
+GET_FULL_NAME2           	000B0     	-1        	LABEL     	code      
+N3                       	000C1     	-1        	LABEL     	code      
+N4                       	000DD     	-1        	LABEL     	code      
+GET_COUNTER_OF_FILES     	000E5     	-1        	LABEL     	code      
+MY_MOVSB                 	000F0     	-1        	LABEL     	code      
+BAD_ARGUMENTS            	0010A     	-1        	LABEL     	code      
+EXIT                     	00111     	-1        	LABEL     	code      
+_LOCATION_COUNTER__N1_LB5	00116     	-1        	LABEL     	code      
+===================================================================================================
+[ 27.05.2021  --  18:16:20 ] 
+< END >
+ 

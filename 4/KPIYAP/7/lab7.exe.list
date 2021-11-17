@@ -1,0 +1,280 @@
+EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
+ 
+lab7.exe -- emu8086 assembler version: 4.05  
+ 
+[ 27.05.2021  --  18:16:20 ] 
+ 
+===================================================================================================
+[LINE]     LOC: MACHINE CODE                          SOURCE
+===================================================================================================
+ 
+[   1]        :                                       .model small
+[   2]        :                                       .data
+[   3]        :                                       
+[   4]    0000: 00 00 00 00 00 00 00 00 00 00 00 00   file_path                   db 100 dup(0)
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00                         
+[   5]    0064: 00 00                                 last_index                  dw 0
+[   6]    0066: 00 00 00 00 00 00 00 00 00 00 00 00   index_arr                   db 20 dup(0)
+                00 00 00 00 00 00 00 00             
+[   7]    007A: 00                                    counter                     db 0
+[   8]    007B: 00 00 00 00 00 00 00 00 00 00 00 00   path                        db 100 dup(0)
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00                         
+[   9]    00DF: 45 72 72 6F 72 0D 0A 24               bad_arguments_msg           db "Error", 0dh, 0ah, "$"
+[  10]    00E7: 00 00 00 00 00 00 00 00 00 00 00 00   program_path                db 100 dup(0)
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00                         
+[  11]    014B: 00 00 00 00 00 00 00 00 00 00 00 00   program_full_path           db 100 dup(0)
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00                         
+[  12]    01AF: 00 00                                 EPB                         dw 0000
+[  13]    01B1: BD 01 00 00                           dw offset commandline, 0
+[  14]    01B5: 5C 00 00 00 6C 00 00 00               dw 005ch, 0, 006ch, 0
+[  15]    01BD: 7D                                    commandline                 db 125
+[  16]    01BE: 20 2F 3F                              db " /?"
+[  17]    01C1: 00 00 00 00 00 00 00 00 00 00 00 00   command_text                db 122 dup(?)
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00                               
+[  18]        :                                       
+[  19]        :                                       .stack 256
+[  20]        :                                       
+[  21]        :                                       .code
+[  22]        :                                       ;.386
+[  23]        :                                       output macro str
+[  24]        :                                       lea dx, str
+[  25]        :                                       mov ah, 9
+[  26]        :                                       int 21h
+[  27]        :                                       output endm
+[  28]        :                                       
+[  29]    0340:                                       start:
+[  30]    0340: B8 00 00                              mov ax, @data
+[  31]    0343: 8E D8                                 mov ds, ax
+[  32]        :                                       ;jmp n99
+[  33]    0345: 26 8A 1E 80 00                        mov bl, es:[80h]
+[  34]    034A: 81 C3 80 00                           	    add bx, 80h
+[  35]    034E: BE 82 00                              	    mov si, 82h
+[  36]    0351: BF 00 00                              	    mov di, offset file_path
+[  37]    0354: 3B F3                                 	    cmp si, bx
+[  38]    0356: 76 03 E9 EF 00                        ja bad_arguments
+[  39]        :                                       
+[  40]    035B:                                       get_path:
+[  41]    035B: 26 80 3C 24                           cmp     BYTE PTR es:[si], '$'
+[  42]    035F: 74 0B                                 je      n99
+[  43]    0361: 26 8A 04                              mov     al, es:[si]
+[  44]    0364: 88 05                                 mov     [di], al
+[  45]    0366: 47                                    inc     di
+[  46]    0367: 46                                    inc     si
+[  47]    0368: 3B F3                                 cmp si, bx
+[  48]    036A: 76 EF                                 jbe get_path
+[  49]        :                                       	
+[  50]    036C:                                       n99:
+[  51]    036C: BF 00 00                              lea di, file_path
+[  52]        :                                       
+[  53]    036F:                                       to_mask:
+[  54]    036F: 80 3D 00                              cmp [di], 0
+[  55]    0372: 74 03                                 je to_mask2
+[  56]    0374: 47                                    inc di
+[  57]    0375: EB F8                                 jmp to_mask
+[  58]        :                                       
+[  59]    0377:                                       to_mask2:
+[  60]    0377: C6 05 2A                              mov [di], "*"
+[  61]    037A: 47                                    inc di
+[  62]    037B: C6 05 2E                              mov [di], "."
+[  63]    037E: 47                                    inc di
+[  64]    037F: C6 05 65                              mov [di], "e"
+[  65]    0382: 47                                    inc di
+[  66]    0383: C6 05 78                              mov [di], "x"
+[  67]    0386: 47                                    inc di
+[  68]    0387: C6 05 65                              mov [di], "e"
+[  69]    038A: BC 16 04                              mov sp, program_length+100h+200h    ;PSP and stack
+[  70]    038D: B4 4A                                 mov ah, 4ah
+[  71]        :                                       stack_shift = program_length + 100h + 200h
+[  72]    038F: BB 16 04                              mov bx, stack_shift shr 4 + 1   ;Размер параграфов
+[  73]    0392: CD 21                                 int 21h
+[  74]    0394: 8C C8                                 mov ax, cs
+[  75]    0396: A3 B3 01                              mov word ptr EPB+4, ax          ;(EXEC Parameter Block))блок параметров функции загрузки файла. Сегмент командной строки
+[  76]    0399: A3 B7 01                              mov word ptr EPB+8, ax          ;блок параметров функции загрузки файла. Блок FCB (File Control Block) (блок управления файлом)
+[  77]    039C: A3 BB 01                              mov word ptr EPB+0ch, ax        ;блок параметров функции загрузки файла. Блок FCB содержит описание файла и его записей
+[  78]    039F: 33 C0                                 xor ax, ax
+[  79]    03A1: 33 C9                                 xor cx, cx
+[  80]    03A3: B4 4E                                 mov ah, 4eh
+[  81]    03A5: BA 00 00                              lea dx, file_path
+[  82]    03A8: CD 21                                 int 21h
+[  83]    03AA: 73 03 E9 9B 00                        jc bad_arguments
+[  84]    03AF: 6A 00                                 push 0
+[  85]    03B1: BF 4B 01                              lea di, program_full_path
+[  86]    03B4: 89 3E 64 00                           mov last_index, di
+[  87]        :                                       
+[  88]    03B8:                                       n1:
+[  89]    03B8: C6 06 7A 00 00                        mov counter, 0
+[  90]    03BD: BE 80 00                              	    mov si, 80h
+[  91]    03C0: 83 C6 1E                              add si, 1eh
+[  92]    03C3: BF E7 00                              	    mov di, offset program_path
+[  93]        :                                       
+[  94]    03C6:                                       get_file:
+[  95]    03C6: 26 80 3C 00                           cmp     BYTE PTR es:[si], 0
+[  96]    03CA: 74 09                                 je      n98
+[  97]    03CC: 26 8A 04                              mov     al, es:[si]
+[  98]    03CF: 88 05                                 mov     [di], al
+[  99]    03D1: 47                                    inc     di
+[ 100]    03D2: 46                                    inc     si
+[ 101]    03D3: EB F1                                 jmp get_file
+[ 102]        :                                       	
+[ 103]    03D5:                                       n98:
+[ 104]    03D5:                                       open_prog:
+[ 105]    03D5: 8B 3E 64 00                           mov di, last_index
+[ 106]    03D9: BE 00 00                              lea si, file_path
+[ 107]        :                                       
+[ 108]    03DC:                                       get_full_name:
+[ 109]    03DC: 80 3C 2A                              cmp [si], "*"
+[ 110]    03DF: 74 0C                                 je n2
+[ 111]    03E1: 8A 04                                 mov al, [si]
+[ 112]    03E3: 88 05                                 mov [di], al
+[ 113]    03E5: FE 06 7A 00                           inc counter
+[ 114]    03E9: 46                                    inc si
+[ 115]    03EA: 47                                    inc di
+[ 116]    03EB: EB EF                                 jmp get_full_name
+[ 117]        :                                       
+[ 118]    03ED:                                       n2:
+[ 119]    03ED: BE E7 00                              lea si, program_path
+[ 120]        :                                       
+[ 121]    03F0:                                       get_full_name2:
+[ 122]    03F0: 80 3C 00                              cmp [si], 0
+[ 123]    03F3: 74 0C                                 je n3
+[ 124]    03F5: 8A 04                                 mov al, [si]
+[ 125]    03F7: 88 05                                 mov [di], al
+[ 126]    03F9: FE 06 7A 00                           inc counter
+[ 127]    03FD: 46                                    inc si
+[ 128]    03FE: 47                                    inc di
+[ 129]    03FF: EB EF                                 jmp get_full_name2
+[ 130]        :                                       
+[ 131]    0401:                                       n3:
+[ 132]    0401: 89 3E 64 00                           mov last_index, di
+[ 133]    0405: 58                                    pop ax
+[ 134]    0406: BF 66 00                              lea di, index_arr
+[ 135]    0409: 03 F8                                 add di, ax
+[ 136]    040B: 40                                    inc ax
+[ 137]    040C: 8A 1E 7A 00                           mov bl, counter
+[ 138]    0410: 88 1D                                 mov [di], bl
+[ 139]    0412: 50                                    push ax
+[ 140]    0413: 33 C0                                 xor ax, ax
+[ 141]    0415: B4 4F                                 mov ah, 4fh
+[ 142]    0417: CD 21                                 int 21h
+[ 143]    0419: 72 02                                 jc n4
+[ 144]    041B: EB 9B                                 jmp n1
+[ 145]        :                                       
+[ 146]    041D:                                       n4:
+[ 147]    041D: BF 66 00                              lea di, index_arr
+[ 148]    0420: 33 C9                                 xor cx, cx
+[ 149]    0422: BE 4B 01                              lea si, program_full_path
+[ 150]        :                                       
+[ 151]    0425:                                       get_counter_of_files:
+[ 152]    0425: 57                                    push di
+[ 153]    0426: 80 3D 00                              cmp [di], 0
+[ 154]    0429: 74 26                                 je exit
+[ 155]    042B: 8A 0D                                 mov cl, [di]
+[ 156]    042D: BF 7B 00                              lea di, path
+[ 157]        :                                       
+[ 158]    0430:                                       my_movsb:
+[ 159]    0430: 8A 04                                 mov al, [si]
+[ 160]    0432: 88 05                                 mov [di], al
+[ 161]    0434: 46                                    inc si
+[ 162]    0435: 47                                    inc di
+[ 163]    0436: E2 F8                                 loop my_movsb
+[ 164]    0438: C6 05 00                              mov [di], 0
+[ 165]    043B: B8 00 4B                              mov ax, 4b00h
+[ 166]    043E: BA 7B 00                              mov dx, offset path
+[ 167]    0441: BB AF 01                              mov bx, offset EPB
+[ 168]    0444: CD 21                                 int 21h
+[ 169]    0446: 5F                                    pop di
+[ 170]    0447: 47                                    inc di
+[ 171]    0448: EB DB                                 jmp get_counter_of_files
+[ 172]        :                                       
+[ 173]    044A:                                       bad_arguments:
+[ 174]    044A: BA DF 00 B4 09 CD 21                  output bad_arguments_msg
+[ 175]        :                                       
+[ 176]    0451:                                       exit:
+[ 177]    0451: B8 00 4C                              mov ax, 4C00H
+[ 178]    0454: CD 21                                 int 21h
+[ 179]        :                                       
+[ 180]    0456:                                       program_length equ $-start
+[ 181]        :                                       end start
+[ 182]        :                                       
+ 
+===================================================================================================
+ 
+EXE HEADER - bytes from 0000 to 01FF inclusive.
+
+0000: 4D      -   exe signature (M)
+0001: 5A      -   exe signature (Z)
+0002: 56      -   bytes on last page (l.byte)
+0003: 00      -   bytes on last page (h.byte)
+0004: 04      -   512 byte pages in file (l.byte)
+0005: 00      -   512 byte pages in file (h.byte)
+0006: 01      -   relocations (l.byte)
+0007: 00      -   relocations (h.byte)
+0008: 20      -   paragraphs in header (l.byte)
+0009: 00      -   paragraphs in header (h.byte)
+000A: 00      -   minimum memory (l.byte)
+000B: 00      -   minimum memory (h.byte)
+000C: FF      -   maximum memory (l.byte)
+000D: FF      -   maximum memory (h.byte)
+000E: 24      -   SS - stack segment (l.byte)
+000F: 00      -   SS - stack segment (h.byte)
+0010: 00      -   SP - stack pointer (l.byte)
+0011: 01      -   SP - stack pointer (h.byte)
+0012: 10      -   check sum (l.byte)
+0013: 92      -   check sum (h.byte)
+0014: 00      -   IP - instruction pointer (l.byte)
+0015: 00      -   IP - instruction pointer (h.byte)
+0016: 34      -   CS - code segment (l.byte)
+0017: 00      -   CS - code segment (h.byte)
+0018: 1E      -   relocation table adress (l.byte)
+0019: 00      -   relocation table adress (h.byte)
+001A: 00      -   overlay number (l.byte)
+001B: 00      -   overlay number (h.byte)
+001C: 01      -   signature (l.byte)
+001D: 00      -   signature (h.byte)
+001E: 01      -   relocation table - offset inside segment (l.byte)
+001F: 00      -   relocation table - offset inside segment (h.byte)
+0020: 34      -   relocation table - segment anchor (l.byte)
+0021: 00      -   relocation table - segment anchor (h.byte)
+0022 to 01FF  -   reserved relocation area  (00) 
+
+
+
+
+===================================================================================================
